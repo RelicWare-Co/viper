@@ -1,15 +1,14 @@
 import { telefunc } from "telefunc";
-// TODO: stop using universal-middleware and directly integrate server middlewares instead. (Bati generates boilerplates that use universal-middleware https://github.com/magne4000/universal-middleware to make Bati's internal logic easier. This is temporary and will be removed soon.)
-import type { Get, UniversalHandler } from "@universal-middleware/core";
+import type { Context } from "hono";
 
-export const telefuncHandler: Get<[], UniversalHandler> = () => async (request, context, runtime) => {
+// TODO: stop using universal-middleware and directly integrate server middlewares instead. (Bati generates boilerplates that use universal-middleware https://github.com/magne4000/universal-middleware to make Bati's internal logic easier. This is temporary and will be removed soon.)
+export const telefuncHandler = async (c: Context) => {
   const httpResponse = await telefunc({
-    url: request.url.toString(),
-    method: request.method,
-    body: await request.text(),
+    url: c.req.url,
+    method: c.req.method,
+    body: await c.req.text(),
     context: {
-      ...context,
-      ...runtime,
+      ...c,
     },
   });
   const { body, statusCode, contentType } = httpResponse;

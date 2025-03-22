@@ -16,13 +16,13 @@ nodeApp.use(compress());
 nodeApp.use(
   "/*",
   serveStatic({
-    root: `./dist/client/`,
+    root: "./dist/client/",
   }),
 );
 
-nodeApp.route("/", app!);
+nodeApp.route("/", app);
 
-const port = envs.PORT ? parseInt(envs.PORT, 10) : 3000;
+const port = envs.PORT ? Number.parseInt(envs.PORT, 10) : 3000;
 
 console.log(`Server listening on http://localhost:${port}`);
 serve({
