@@ -341,10 +341,10 @@ function Orgs() {
     }
   };
 
-  const setActiveOrg = async (orgId: string) => {
+  const setActiveOrg = async (orgSlug: string) => {
     try {
       await authClient.organization.setActive({
-        organizationId: orgId,
+        organizationSlug: orgSlug,
       });
       
       notifications.show({
@@ -548,7 +548,7 @@ function Orgs() {
                 </Menu.Dropdown>
               </Menu>
 
-              <Card.Section p="md" onClick={() => setActiveOrg(org.id)}>
+              <Card.Section p="md" onClick={() => setActiveOrg(org.slug)}>
                 {org.logo ? (
                   <Image
                     src={org.logo}
@@ -563,7 +563,7 @@ function Orgs() {
                 )}
               </Card.Section>
 
-              <Stack mt="md" mb="xs" onClick={() => setActiveOrg(org.id)}>
+              <Stack mt="md" mb="xs" onClick={() => setActiveOrg(org.slug)}>
                 <Text fw={500}>{org.name}</Text>
                 <Text size="sm" c="dimmed">
                   {org.slug}
@@ -576,7 +576,7 @@ function Orgs() {
                 fullWidth 
                 mt="md" 
                 radius="md"
-                onClick={() => setActiveOrg(org.id)}
+                onClick={() => setActiveOrg(org.slug)}
               >
                 Select Organization
               </Button>

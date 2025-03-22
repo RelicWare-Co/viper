@@ -8,7 +8,9 @@ export const telefuncHandler = async (c: Context) => {
     method: c.req.method,
     body: await c.req.text(),
     context: {
-      ...c,
+      session: c.get("session"),
+      user: c.get("user"),
+      originalContext: c,
     },
   });
   const { body, statusCode, contentType } = httpResponse;
