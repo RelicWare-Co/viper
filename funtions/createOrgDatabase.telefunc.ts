@@ -6,7 +6,9 @@ import * as schema from "../database/schema";
 import { migrate } from "drizzle-orm/libsql/migrator";
 
 export async function createOrgDatabase(orgName: string) {
-    const db = await turso.databases.create(orgName);
+    const db = await turso.databases.create(orgName, {
+        group: "viper"
+    });
     const dbUrl = `libsql://${getDatabaseUrl(db.name)}`;
     const client = createLibsqlClient(dbUrl);
     const dbclient = drizzle(client,{
