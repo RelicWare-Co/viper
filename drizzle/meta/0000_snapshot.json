@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "bc8f364d-a615-48b6-bc83-ed2dbf068742",
+  "id": "550dd00b-b966-44b7-9d8a-4bd7a760079b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "categories": {
@@ -11,13 +11,6 @@
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "text",
-          "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
@@ -58,21 +51,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "categories_organization_id_organizations_id_fk": {
-          "name": "categories_organization_id_organizations_id_fk",
-          "tableFrom": "categories",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
@@ -84,13 +63,6 @@
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "text",
-          "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
@@ -152,21 +124,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "customers_organization_id_organizations_id_fk": {
-          "name": "customers_organization_id_organizations_id_fk",
-          "tableFrom": "customers",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
@@ -485,13 +443,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "name": {
           "name": "name",
           "type": "text",
@@ -520,86 +471,6 @@
           "notNull": false,
           "autoincrement": false,
           "default": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "locations_organization_id_organizations_id_fk": {
-          "name": "locations_organization_id_organizations_id_fk",
-          "tableFrom": "locations",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "organizations": {
-      "name": "organizations",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "address": {
-          "name": "address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "phone": {
-          "name": "phone",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "tax_id": {
-          "name": "tax_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
@@ -813,13 +684,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "name": {
           "name": "name",
           "type": "text",
@@ -911,19 +775,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "products_organization_id_organizations_id_fk": {
-          "name": "products_organization_id_organizations_id_fk",
-          "tableFrom": "products",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "products_category_id_categories_id_fk": {
           "name": "products_category_id_categories_id_fk",
           "tableFrom": "products",
@@ -1096,13 +947,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "location_id": {
           "name": "location_id",
           "type": "text",
@@ -1201,19 +1045,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "purchase_orders_organization_id_organizations_id_fk": {
-          "name": "purchase_orders_organization_id_organizations_id_fk",
-          "tableFrom": "purchase_orders",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "purchase_orders_location_id_locations_id_fk": {
           "name": "purchase_orders_location_id_locations_id_fk",
           "tableFrom": "purchase_orders",
@@ -1399,13 +1230,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "location_id": {
           "name": "location_id",
           "type": "text",
@@ -1498,19 +1322,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "sales_organization_id_organizations_id_fk": {
-          "name": "sales_organization_id_organizations_id_fk",
-          "tableFrom": "sales",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "sales_location_id_locations_id_fk": {
           "name": "sales_location_id_locations_id_fk",
           "tableFrom": "sales",
@@ -1549,13 +1360,6 @@
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "text",
-          "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
@@ -1632,21 +1436,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "suppliers_organization_id_organizations_id_fk": {
-          "name": "suppliers_organization_id_organizations_id_fk",
-          "tableFrom": "suppliers",
-          "tableTo": "organizations",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}

@@ -1,17 +1,14 @@
 CREATE TABLE `categories` (
 	`id` text PRIMARY KEY NOT NULL,
-	`organization_id` text NOT NULL,
 	`name` text NOT NULL,
 	`description` text,
 	`parent_id` text,
 	`created_at` integer,
-	`updated_at` integer,
-	FOREIGN KEY (`organization_id`) REFERENCES `organizations`(`id`) ON UPDATE no action ON DELETE no action
+	`updated_at` integer
 );
 --> statement-breakpoint
 CREATE TABLE `customers` (
 	`id` text PRIMARY KEY NOT NULL,
-	`organization_id` text NOT NULL,
 	`name` text NOT NULL,
 	`email` text,
 	`phone` text,
@@ -19,8 +16,7 @@ CREATE TABLE `customers` (
 	`tax_id` text,
 	`notes` text,
 	`created_at` integer,
-	`updated_at` integer,
-	FOREIGN KEY (`organization_id`) REFERENCES `organizations`(`id`) ON UPDATE no action ON DELETE no action
+	`updated_at` integer
 );
 --> statement-breakpoint
 CREATE TABLE `inventory` (
@@ -68,23 +64,10 @@ CREATE TABLE `inventory_transactions` (
 --> statement-breakpoint
 CREATE TABLE `locations` (
 	`id` text PRIMARY KEY NOT NULL,
-	`organization_id` text NOT NULL,
 	`name` text NOT NULL,
 	`address` text,
 	`phone` text,
 	`is_default` integer DEFAULT false,
-	`created_at` integer,
-	`updated_at` integer,
-	FOREIGN KEY (`organization_id`) REFERENCES `organizations`(`id`) ON UPDATE no action ON DELETE no action
-);
---> statement-breakpoint
-CREATE TABLE `organizations` (
-	`id` text PRIMARY KEY NOT NULL,
-	`name` text NOT NULL,
-	`address` text,
-	`phone` text,
-	`email` text,
-	`tax_id` text,
 	`created_at` integer,
 	`updated_at` integer
 );
@@ -118,7 +101,6 @@ CREATE TABLE `product_variants` (
 --> statement-breakpoint
 CREATE TABLE `products` (
 	`id` text PRIMARY KEY NOT NULL,
-	`organization_id` text NOT NULL,
 	`name` text NOT NULL,
 	`description` text,
 	`sku` text,
@@ -131,7 +113,6 @@ CREATE TABLE `products` (
 	`image_url` text,
 	`created_at` integer,
 	`updated_at` integer,
-	FOREIGN KEY (`organization_id`) REFERENCES `organizations`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -156,7 +137,6 @@ CREATE TABLE `purchase_order_items` (
 --> statement-breakpoint
 CREATE TABLE `purchase_orders` (
 	`id` text PRIMARY KEY NOT NULL,
-	`organization_id` text NOT NULL,
 	`location_id` text NOT NULL,
 	`supplier_id` text NOT NULL,
 	`order_number` text NOT NULL,
@@ -170,7 +150,6 @@ CREATE TABLE `purchase_orders` (
 	`user_id` text NOT NULL,
 	`created_at` integer,
 	`updated_at` integer,
-	FOREIGN KEY (`organization_id`) REFERENCES `organizations`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`supplier_id`) REFERENCES `suppliers`(`id`) ON UPDATE no action ON DELETE no action
 );
@@ -196,7 +175,6 @@ CREATE TABLE `sale_items` (
 --> statement-breakpoint
 CREATE TABLE `sales` (
 	`id` text PRIMARY KEY NOT NULL,
-	`organization_id` text NOT NULL,
 	`location_id` text NOT NULL,
 	`customer_id` text,
 	`order_number` text NOT NULL,
@@ -209,14 +187,12 @@ CREATE TABLE `sales` (
 	`user_id` text NOT NULL,
 	`created_at` integer,
 	`updated_at` integer,
-	FOREIGN KEY (`organization_id`) REFERENCES `organizations`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`customer_id`) REFERENCES `customers`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `suppliers` (
 	`id` text PRIMARY KEY NOT NULL,
-	`organization_id` text NOT NULL,
 	`name` text NOT NULL,
 	`contact_name` text,
 	`email` text,
@@ -226,6 +202,5 @@ CREATE TABLE `suppliers` (
 	`notes` text,
 	`is_active` integer DEFAULT true,
 	`created_at` integer,
-	`updated_at` integer,
-	FOREIGN KEY (`organization_id`) REFERENCES `organizations`(`id`) ON UPDATE no action ON DELETE no action
+	`updated_at` integer
 );

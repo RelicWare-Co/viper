@@ -6,18 +6,28 @@ import * as schema from "../database/schema";
 import { migrate } from "drizzle-orm/libsql/migrator";
 
 export async function createOrgDatabase(orgId: string) {
-    const db = await turso.databases.create(orgId, {
-        group: "viper"
-    });
-    const dbUrl = `libsql://${getDatabaseUrl(db.name)}`;
-    const client = createLibsqlClient(dbUrl);
-    const dbclient = drizzle(client,{
-        schema
-    })
+	console.time("createOrgDatabase-hash");
+	const hasher = new Bun.CryptoHasher("ripemd160");
+	hasher.update(orgId);
+	const hash = hasher.digest("hex");
+	console.log("hash", hash);
+	console.timeEnd("createOrgDatabase-hash");
     try {
-        await migrate(dbclient, { migrationsFolder: "./drizzle" })
-        console.log("Database migrated successfully");
+        const db = await turso.databases.create(hash, {
+            group: "viper",
+        });
     } catch (error) {
-        console.error(error);
+        console.log("Error creating database")
     }
+	const dbUrl = `libsql://${getDatabaseUrl(hash)}`;
+	const client = createLibsqlClient(dbUrl);
+	const dbclient = drizzle(client, {
+		schema,
+	});
+	try {
+		await migrate(dbclient, { migrationsFolder: "./drizzle" });
+		console.log("Database migrated successfully");
+	} catch (error) {
+		console.error(error);
+	}
 }

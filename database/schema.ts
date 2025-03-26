@@ -5,33 +5,9 @@ import { relations } from 'drizzle-orm';
 
 // ======= Base Tables =======
 
-// Organizations table
-export const organizations = sqliteTable('organizations', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  name: text('name').notNull(),
-  address: text('address'),
-  phone: text('phone'),
-  email: text('email'),
-  taxId: text('tax_id'),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
-  updatedAt: integer('updated_at', { mode: 'timestamp' })
-    .$defaultFn(() => new Date())
-    .$onUpdate(() => new Date()),
-});
-
-export const organizationsRelations = relations(organizations, ({ many }) => ({
-  locations: many(locations),
-  categories: many(categories),
-  products: many(products),
-  customers: many(customers),
-  suppliers: many(suppliers),
-  sales: many(sales),
-}));
-
 // Locations/Branches table
 export const locations = sqliteTable('locations', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
-  organizationId: text('organization_id').notNull().references(() => organizations.id),
   name: text('name').notNull(),
   address: text('address'),
   phone: text('phone'),
@@ -42,11 +18,7 @@ export const locations = sqliteTable('locations', {
     .$onUpdate(() => new Date()),
 });
 
-export const locationsRelations = relations(locations, ({ one, many }) => ({
-  organization: one(organizations, {
-    fields: [locations.organizationId],
-    references: [organizations.id],
-  }),
+export const locationsRelations = relations(locations, ({ many }) => ({
   inventory: many(inventory),
   sales: many(sales),
   purchaseOrders: many(purchaseOrders),
@@ -57,7 +29,6 @@ export const locationsRelations = relations(locations, ({ one, many }) => ({
 // Categories table
 export const categories = sqliteTable('categories', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
-  organizationId: text('organization_id').notNull().references(() => organizations.id),
   name: text('name').notNull(),
   description: text('description'),
   parentId: text('parent_id'), // Self-reference
@@ -68,10 +39,6 @@ export const categories = sqliteTable('categories', {
 });
 
 export const categoriesRelations = relations(categories, ({ one, many }) => ({
-  organization: one(organizations, {
-    fields: [categories.organizationId],
-    references: [organizations.id],
-  }),
   parent: one(categories, {
     fields: [categories.parentId],
     references: [categories.id],
@@ -83,7 +50,6 @@ export const categoriesRelations = relations(categories, ({ one, many }) => ({
 // Products table
 export const products = sqliteTable('products', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
-  organizationId: text('organization_id').notNull().references(() => organizations.id),
   name: text('name').notNull(),
   description: text('description'),
   sku: text('sku'),
@@ -101,10 +67,6 @@ export const products = sqliteTable('products', {
 });
 
 export const productsRelations = relations(products, ({ one, many }) => ({
-  organization: one(organizations, {
-    fields: [products.organizationId],
-    references: [organizations.id],
-  }),
   category: one(categories, {
     fields: [products.categoryId],
     references: [categories.id],
@@ -224,7 +186,6 @@ export const inventoryAlertsRelations = relations(inventoryAlerts, ({ one }) => 
 // Customers table
 export const customers = sqliteTable('customers', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
-  organizationId: text('organization_id').notNull().references(() => organizations.id),
   name: text('name').notNull(),
   email: text('email'),
   phone: text('phone'),
@@ -237,18 +198,13 @@ export const customers = sqliteTable('customers', {
     .$onUpdate(() => new Date()),
 });
 
-export const customersRelations = relations(customers, ({ one, many }) => ({
-  organization: one(organizations, {
-    fields: [customers.organizationId],
-    references: [organizations.id],
-  }),
+export const customersRelations = relations(customers, ({ many }) => ({
   sales: many(sales),
 }));
 
 // Sales/Orders table
 export const sales = sqliteTable('sales', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
-  organizationId: text('organization_id').notNull().references(() => organizations.id),
   locationId: text('location_id').notNull().references(() => locations.id),
   customerId: text('customer_id').references(() => customers.id),
   orderNumber: text('order_number').notNull(),
@@ -268,10 +224,6 @@ export const sales = sqliteTable('sales', {
 });
 
 export const salesRelations = relations(sales, ({ one, many }) => ({
-  organization: one(organizations, {
-    fields: [sales.organizationId],
-    references: [organizations.id],
-  }),
   location: one(locations, {
     fields: [sales.locationId],
     references: [locations.id],
@@ -343,7 +295,6 @@ export const paymentsRelations = relations(payments, ({ one }) => ({
 // Suppliers table
 export const suppliers = sqliteTable('suppliers', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
-  organizationId: text('organization_id').notNull().references(() => organizations.id),
   name: text('name').notNull(),
   contactName: text('contact_name'),
   email: text('email'),
@@ -358,18 +309,13 @@ export const suppliers = sqliteTable('suppliers', {
     .$onUpdate(() => new Date()),
 });
 
-export const suppliersRelations = relations(suppliers, ({ one, many }) => ({
-  organization: one(organizations, {
-    fields: [suppliers.organizationId],
-    references: [organizations.id],
-  }),
+export const suppliersRelations = relations(suppliers, ({ many }) => ({
   purchaseOrders: many(purchaseOrders),
 }));
 
 // Purchase orders
 export const purchaseOrders = sqliteTable('purchase_orders', {
   id: text('id').primaryKey().$defaultFn(() => createId()),
-  organizationId: text('organization_id').notNull().references(() => organizations.id),
   locationId: text('location_id').notNull().references(() => locations.id),
   supplierId: text('supplier_id').notNull().references(() => suppliers.id),
   orderNumber: text('order_number').notNull(),
@@ -390,10 +336,6 @@ export const purchaseOrders = sqliteTable('purchase_orders', {
 });
 
 export const purchaseOrdersRelations = relations(purchaseOrders, ({ one, many }) => ({
-  organization: one(organizations, {
-    fields: [purchaseOrders.organizationId],
-    references: [organizations.id],
-  }),
   location: one(locations, {
     fields: [purchaseOrders.locationId],
     references: [locations.id],
