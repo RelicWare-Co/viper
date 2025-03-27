@@ -3,15 +3,9 @@ import { LibsqlDialect } from "@libsql/kysely-libsql";
 import { admin } from "better-auth/plugins"
 import { organization } from "better-auth/plugins"
 import { createOrgDatabase } from "../funtions/createOrgDatabase.telefunc";
-import { createClient } from "@libsql/client/ws";
 const dialect = new LibsqlDialect({
 	url: process.env.TURSO_DATABASE_URL || "",
 	authToken: process.env.TURSO_AUTH_TOKEN || "",
-});
-
-const client = createClient({
-    url: process.env.TURSO_DATABASE_URL || "",
-    authToken: process.env.TURSO_AUTH_TOKEN || "",
 });
 
 const options = {
