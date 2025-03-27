@@ -1,34 +1,29 @@
 FROM oven/bun:1 AS base
 
-# Install dependencies only when needed
+# Build stage for dependencies
 FROM base AS deps
 WORKDIR /app
 
-# Install dependencies with Bun
-COPY package.json bun.lock* bunfig.toml ./
+# Copy package files
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* bun.lock* bunfig.toml* ./
+
 RUN bun install
 
-# Rebuild the source code only when needed
-FROM base AS builder
+# Build stage for application
+FROM oven/bun:1 AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Add a build argument to force rebuild when needed
+# Build the application
 RUN bun run build
 
-# Production image, copy all the files and run the app
-FROM base AS production
-WORKDIR /app
-
-# Copy only necessary files from builder
-COPY . .
-
+# Configure runtime environment
 EXPOSE 3000
 
 ENV PORT=3000
-ENV HOSTNAME=0.0.0.0
+ENV HOSTNAME="0.0.0.0"
 ENV NODE_ENV=production
 
-# Run the application
-CMD ["bun", "start"]
+# Start the application
+CMD ["bun", "./hono-entry.ts"]
