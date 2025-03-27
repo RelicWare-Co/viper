@@ -1,0 +1,91 @@
+import { Button, Modal, TextInput } from "@mantine/core";
+import { onCreateCategory, onGetCategories } from "./categories.telefunc";
+import { useDisclosure } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+
+function categories() {
+  const [createModalOpened, { open, close }] = useDisclosure(false);
+
+  const createCategoryForm = useForm({
+    initialValues: {
+      categoryName: "",
+      categoryDescription: "",
+    },
+    validate: {
+      categoryName: (value) =>
+        value.trim().length === 0 ? "Category name is required" : null,
+      categoryDescription: (value) =>
+        value.trim().length === 0 ? "Category description is required" : null,
+    },
+  });
+
+  const handleCreateCategory = async (values: {
+    categoryName: string;
+    categoryDescription: string;
+  }) => {
+    try {
+      const category = await onCreateCategory(
+        values.categoryName,
+        values.categoryDescription
+      );
+      console.log(category);
+      createCategoryForm.reset();
+      close();
+
+      notifications.show({
+        title: 'Categoría creada',
+        message: `La categoría "${values.categoryName}" ha sido creada exitosamente`,
+        color: 'green',
+        autoClose: 5000,
+      });
+      
+    } catch (error) {
+      console.log("Failed to create category:", error);
+
+      notifications.show({
+        title: 'Error',
+        message: 'No se pudo crear la categoría. Por favor intente nuevamente',
+        color: 'red',
+        autoClose: 5000,
+      });
+    }
+  };
+
+  return (
+    <>
+      <div>
+        <h1>Categories</h1>
+        <Button onClick={open}>Create new category</Button>
+        <Button
+          onClick={() =>
+            onGetCategories().then((categories) => console.log(categories))
+          }
+        >
+          Get Categories
+        </Button>
+      </div>
+      <Modal
+        opened={createModalOpened}
+        onClose={close}
+        title="Create new category"
+      >
+        <form onSubmit={createCategoryForm.onSubmit(handleCreateCategory)}>
+          <TextInput
+            label="Category name"
+            placeholder="Category name"
+            {...createCategoryForm.getInputProps("categoryName")}
+          />
+
+          <TextInput
+            label="Category description"
+            placeholder="Category description"
+            {...createCategoryForm.getInputProps("categoryDescription")}
+          />
+          <Button type="submit">Create</Button>
+        </form>
+      </Modal>
+    </>
+  );
+}
+export default categories;
