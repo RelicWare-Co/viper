@@ -1,5 +1,9 @@
 import { Button, Modal, TextInput } from "@mantine/core";
-import { onCreateCategory, onGetCategories } from "./categories.telefunc";
+import {
+  onCheckCategoryExists,
+  onCreateCategory,
+  onGetCategories,
+} from "./categories.telefunc";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
@@ -25,31 +29,42 @@ function categories() {
     categoryDescription: string;
   }) => {
     try {
+      const categoryExists = await onCheckCategoryExists(values.categoryName);
+
+      if (categoryExists) {
+        notifications.show({
+          title: "Categoría duplicada",
+          message: `La categoría "${values.categoryName}" ya existe`,
+          color: "yellow",
+          autoClose: 5000,
+        });
+        return;
+      }
+
       const category = await onCreateCategory(
         values.categoryName,
         values.categoryDescription
       );
       console.log(category);
-      createCategoryForm.reset();
-      close();
 
       notifications.show({
-        title: 'Categoría creada',
+        title: "Categoría creada",
         message: `La categoría "${values.categoryName}" ha sido creada exitosamente`,
-        color: 'green',
+        color: "green",
         autoClose: 5000,
       });
-      
     } catch (error) {
       console.log("Failed to create category:", error);
 
       notifications.show({
-        title: 'Error',
-        message: 'No se pudo crear la categoría. Por favor intente nuevamente',
-        color: 'red',
+        title: "Error",
+        message: "No se pudo crear la categoría. Por favor intente nuevamente",
+        color: "red",
         autoClose: 5000,
       });
     }
+    createCategoryForm.reset();
+    close();
   };
 
   return (

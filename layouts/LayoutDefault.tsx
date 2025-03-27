@@ -60,6 +60,7 @@ export default function LayoutDefault({
 				</AppShell.Header>
 				<AppShell.Navbar p="md">
 					<Link href="/" label="Welcome" />
+					<Link href="/dashboard" label="Dashboard" />
 					<Link href="/todo" label="Todo" />
 					<Link href="/star-wars" label="Data Fetching" />
 					<Link href="/orgs" label="Organizations" />
