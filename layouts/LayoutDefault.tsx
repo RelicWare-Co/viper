@@ -16,6 +16,8 @@ import logoUrl from "../assets/logo.svg";
 import { Link } from "../components/Link";
 import { authClient } from "../lib/auth-client.js";
 import { navigate } from "vike/client/router";
+import { Notifications } from "@mantine/notifications";
+import '@mantine/notifications/styles.css';
 
 export default function LayoutDefault({
 	children,
@@ -24,6 +26,7 @@ export default function LayoutDefault({
 	const [opened, { toggle }] = useDisclosure();
 	return (
 		<MantineProvider theme={theme}>
+			<Notifications />
 			<AppShell
 				header={{ height: 60 }}
 				navbar={{
@@ -57,8 +60,11 @@ export default function LayoutDefault({
 				</AppShell.Header>
 				<AppShell.Navbar p="md">
 					<Link href="/" label="Welcome" />
+					<Link href="/dashboard" label="Dashboard" />
 					<Link href="/todo" label="Todo" />
 					<Link href="/star-wars" label="Data Fetching" />
+					<Link href="/orgs" label="Organizations" />
+					<Link href="/categories" label="Categories" />
 				</AppShell.Navbar>
 				<AppShell.Main> {children} </AppShell.Main>
 			</AppShell>
