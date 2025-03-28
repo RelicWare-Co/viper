@@ -6,7 +6,8 @@
     "dev": "vite --port 3000",
     "build": "vite build && tsc",
     "serve": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "drizzle:generate": "bunx drizzle-kit generate"
   },
   "dependencies": {
     "@libsql/client": "^0.15.1",
@@ -40,6 +41,7 @@
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.41.0",
     "embla-carousel-react": "^7.1.0",
+    "neverthrow": "^8.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "2",

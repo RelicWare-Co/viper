@@ -25,9 +25,7 @@ const options = {
 	plugins: [admin(), organization({
         organizationCreation: {
             disabled: false, // Set to true to disable organization creation
-            afterCreate: async ({ organization, member, user }, request) => {
-                // Run custom logic after organization is created
-                // e.g., create default resources, send notifications
+            afterCreate: async ({ organization }) => {
                 await createOrgDatabase(organization.id);
             },
         }

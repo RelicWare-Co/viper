@@ -43,9 +43,11 @@ import {
 } from '@tabler/icons-react';
 import { useDisclosure } from "@mantine/hooks";
 import { createFileRoute } from '@tanstack/react-router'
+import { routeAuthChecker } from "@/guards/route-auth-checker";
 
 export const Route = createFileRoute('/orgs/')({
   component: Orgs,
+  beforeLoad: routeAuthChecker
 })
 
 

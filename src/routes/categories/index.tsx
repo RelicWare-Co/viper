@@ -8,9 +8,11 @@ import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { createFileRoute } from '@tanstack/react-router'
+import { routeOrgChecker } from "@/guards/route-org-checker";
 
 export const Route = createFileRoute('/categories/')({
   component: Categories,
+  beforeLoad: routeOrgChecker
 })
 
 
