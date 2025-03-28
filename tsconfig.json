@@ -21,12 +21,12 @@
       "bun-types"
     ],
     "jsx": "preserve",
-    "jsxImportSource": "react"
+    "jsxImportSource": "react",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "exclude": [
     "dist"
   ],
-  "paths": {
-    "@/*": ["./*"]
-  }
 }

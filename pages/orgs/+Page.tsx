@@ -83,6 +83,7 @@ function Orgs() {
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [invitationCode, setInvitationCode] = useState<string>("");
+  const [clientLoaded, setClientLoaded] = useState(false);
   const { data: organizations = [], isPending } = authClient.useListOrganizations();
   
   // Modal states
@@ -154,11 +155,41 @@ function Orgs() {
     }
 
     setIsCheckingSlug(true);
+    
     try {
-      await authClient.organization.checkSlug({ slug });
-      setIsSlugAvailable(true);
-    } catch (error) {
-      setIsSlugAvailable(false);
+      // Check if the slug is available
+      const response = await authClient.organization.checkSlug({ slug });
+      
+      // Debug the actual response
+      console.log("Slug check response:", response);
+      
+      // Check the response structure based on the actual format observed
+      if (response && 'error' in response && response.error) {
+        const { error } = response;
+        
+        if (error.code === 'SLUG_IS_TAKEN' && error.message === 'slug is taken') {
+          // Slug is taken
+          setIsSlugAvailable(false);
+        } else {
+          // Some other error
+          console.error("Unexpected error in response:", error);
+          setIsSlugAvailable(null);
+        }
+      } else if (response && 'data' in response && response.data === null && !('error' in response)) {
+        // Success response with null data and no error - slug is available
+        setIsSlugAvailable(true);
+      } else if ('status' in response && response.status === true) {
+        // Alternative success format
+        setIsSlugAvailable(true);
+      } else {
+        // Unexpected response format
+        console.error("Unexpected response format checking slug:", response);
+        setIsSlugAvailable(null);
+      }
+    } catch (error: unknown) {
+      // Handle any unexpected errors (network issues, etc.)
+      console.error("Error checking slug availability:", error);
+      setIsSlugAvailable(null);
     } finally {
       setIsCheckingSlug(false);
     }
@@ -168,33 +199,92 @@ function Orgs() {
     const debounceTimer = setTimeout(() => {
       if (form.values.slug) {
         checkSlug(form.values.slug);
+      } else {
+        // Clear the availability state if there's no slug
+        setIsSlugAvailable(null);
       }
     }, 500);
 
     return () => clearTimeout(debounceTimer);
   }, [form.values.slug, checkSlug]);
 
+  useEffect(() => {
+    // Set clientLoaded to true after component mounts (client-side only)
+    setClientLoaded(true);
+  }, []);
+
   const handleCreateOrg = async (values: typeof form.values) => {
+    // Extra validation check before attempting to create
+    if (isSlugAvailable === false || isSlugAvailable === null) {
+      // Force another check just to be sure
+      await checkSlug(values.slug);
+      
+      if (isSlugAvailable === false) {
+        notifications.show({
+          title: "Error",
+          message: "Please use a different slug. This one may already be taken.",
+          color: "red",
+        });
+        return;
+      }
+    }
+    
     try {
-      await authClient.organization.create({
+      const response = await authClient.organization.create({
         name: values.name,
         slug: values.slug,
         logo: values.logo || undefined,
       });
       
+      // Log response for debugging
+      console.log("Create org response:", response);
+      
       setIsCreating(false);
       form.reset();
+      setIsSlugAvailable(null); // Reset slug availability state
+      
       notifications.show({
         title: "Success",
         message: "Organization created successfully",
         color: "green",
       });
-    } catch (error) {
-      notifications.show({
-        title: "Error",
-        message: "Failed to create organization",
-        color: "red",
-      });
+    } catch (error: unknown) {
+      console.error("Create org error:", error);
+      
+      // Handle the nested error structure
+      type ErrorResponse = {
+        error?: {
+          code?: string;
+          message?: string;
+          status?: number;
+        };
+      };
+      
+      const errorResponse = error as ErrorResponse;
+      
+      // Check if we have a nested error with the SLUG_IS_TAKEN code
+      if (
+        errorResponse && 
+        'error' in errorResponse && 
+        errorResponse.error && 
+        errorResponse.error.code === 'SLUG_IS_TAKEN' && 
+        errorResponse.error.message === 'slug is taken'
+      ) {
+        setIsSlugAvailable(false);
+        notifications.show({
+          title: "Error",
+          message: "This organization slug is already taken. Please choose another one.",
+          color: "red",
+        });
+      } else {
+        // Generic error handling
+        const errorMessage = (error as Error)?.message || "Unknown error";
+        notifications.show({
+          title: "Error",
+          message: `Failed to create organization: ${errorMessage}`,
+          color: "red",
+        });
+      }
     }
   };
 
@@ -413,11 +503,22 @@ function Orgs() {
     openInviteModal();
   };
 
-  if (isPending) {
+  if (!clientLoaded) {
+    // Initial server render - render a consistent skeleton to avoid hydration mismatch
     return (
-      <Center h="100vh">
-        <Loader size="xl" />
-      </Center>
+      <Box py="xl">
+        <Title order={1} mb="xl">Organizations</Title>
+      </Box>
+    );
+  }
+
+  if (isPending && clientLoaded) {
+    return (
+      <Box py="xl">
+        <Center h="100vh">
+          <Loader size="xl" />
+        </Center>
+      </Box>
     );
   }
 
@@ -462,6 +563,7 @@ function Orgs() {
               <TextInput
                 label="Organization Slug"
                 placeholder="my-org"
+                description="A unique identifier for your organization. Used in URLs."
                 required
                 rightSection={
                   isCheckingSlug ? (
@@ -485,10 +587,17 @@ function Orgs() {
                 <Button variant="light" onClick={() => {
                   setIsCreating(false);
                   form.reset();
+                  setIsSlugAvailable(null); // Reset slug availability state
                 }}>
                   Cancel
                 </Button>
-                <Button type="submit">Create Organization</Button>
+                <Button 
+                  type="submit"
+                  disabled={isSlugAvailable === false || isCheckingSlug || form.values.slug.length < 2}
+                  loading={isCheckingSlug}
+                >
+                  Create Organization
+                </Button>
               </Group>
             </Stack>
           </form>

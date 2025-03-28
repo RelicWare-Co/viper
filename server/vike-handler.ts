@@ -7,7 +7,10 @@ export const vikeHandler = async (c: Context) => {
   const pageContextInit = { 
     ...c, 
     urlOriginal: c.req.url, 
-    headersOriginal: c.req.header()
+    headersOriginal: c.req.header(),
+    db: c.get("db"),
+    session: c.get("session"),
+    user: c.get("user"),
   };
   const pageContext = await renderPage(pageContextInit);
   const response = pageContext.httpResponse;

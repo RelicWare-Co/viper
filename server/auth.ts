@@ -2,7 +2,7 @@ import { betterAuth, type BetterAuthOptions } from "better-auth";
 import { LibsqlDialect } from "@libsql/kysely-libsql";
 import { admin } from "better-auth/plugins"
 import { organization } from "better-auth/plugins"
-import { createOrgDatabase } from "../funtions/createOrgDatabase.telefunc";
+import { createOrgDatabase } from "../functions/createOrgDatabase.telefunc";
 const dialect = new LibsqlDialect({
 	url: process.env.TURSO_DATABASE_URL || "",
 	authToken: process.env.TURSO_AUTH_TOKEN || "",

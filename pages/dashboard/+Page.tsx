@@ -1,5 +1,5 @@
 import { Button } from "@mantine/core";
-import { getProducts } from "../../funtions/getProducts.telefunc";
+import { getProducts } from "@/functions/getProducts.telefunc";
 
 function Dashboard() {
   return <div>Dashboard

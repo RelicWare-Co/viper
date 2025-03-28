@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { categories } from "../../database/schema";
-import getDB from "../../lib/get-db";
+import { categories } from "@/database/schema";
+import getDB from "@/lib/get-db";
 
 export async function onCreateCategory(categoryName: string, categoryDescription: string) {
     const db = getDB();
@@ -10,11 +10,11 @@ export async function onCreateCategory(categoryName: string, categoryDescription
 
 export async function onGetCategories() {
     const db = getDB();
-    const result = await db.select().from(categories)
+    const result = await db.select().from(categories);
     return result;
 }
 
-export async function onCheckCategoryExists(categoryName: string): Promise<Boolean> {
+export async function onCheckCategoryExists(categoryName: string): Promise<boolean> {
     const db = getDB();
     try {
         const existingCategory = await db.query.categories.findFirst({
