@@ -378,3 +378,6 @@ export const purchaseOrderItemsRelations = relations(purchaseOrderItems, ({ one 
     references: [productVariants.id],
   }),
 }));
+
+export type Category = typeof categories.$inferSelect;
+export type CategoryInsert = typeof categories.$inferInsert;
