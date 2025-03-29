@@ -16,6 +16,7 @@ import { Route as OrgsIndexImport } from './routes/orgs/index'
 import { Route as DashboardIndexImport } from './routes/dashboard/index'
 import { Route as CategoriesIndexImport } from './routes/categories/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
+import { Route as CategoriesAnotherImport } from './routes/categories/another'
 
 // Create/Update Routes
 
@@ -49,6 +50,12 @@ const AuthIndexRoute = AuthIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const CategoriesAnotherRoute = CategoriesAnotherImport.update({
+  id: '/categories/another',
+  path: '/categories/another',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -58,6 +65,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/categories/another': {
+      id: '/categories/another'
+      path: '/categories/another'
+      fullPath: '/categories/another'
+      preLoaderRoute: typeof CategoriesAnotherImport
       parentRoute: typeof rootRoute
     }
     '/auth/': {
@@ -95,6 +109,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/categories/another': typeof CategoriesAnotherRoute
   '/auth': typeof AuthIndexRoute
   '/categories': typeof CategoriesIndexRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -103,6 +118,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/categories/another': typeof CategoriesAnotherRoute
   '/auth': typeof AuthIndexRoute
   '/categories': typeof CategoriesIndexRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -112,6 +128,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/categories/another': typeof CategoriesAnotherRoute
   '/auth/': typeof AuthIndexRoute
   '/categories/': typeof CategoriesIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -120,15 +137,35 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/categories' | '/dashboard' | '/orgs'
+  fullPaths:
+    | '/'
+    | '/categories/another'
+    | '/auth'
+    | '/categories'
+    | '/dashboard'
+    | '/orgs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/categories' | '/dashboard' | '/orgs'
-  id: '__root__' | '/' | '/auth/' | '/categories/' | '/dashboard/' | '/orgs/'
+  to:
+    | '/'
+    | '/categories/another'
+    | '/auth'
+    | '/categories'
+    | '/dashboard'
+    | '/orgs'
+  id:
+    | '__root__'
+    | '/'
+    | '/categories/another'
+    | '/auth/'
+    | '/categories/'
+    | '/dashboard/'
+    | '/orgs/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CategoriesAnotherRoute: typeof CategoriesAnotherRoute
   AuthIndexRoute: typeof AuthIndexRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
@@ -137,6 +174,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CategoriesAnotherRoute: CategoriesAnotherRoute,
   AuthIndexRoute: AuthIndexRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   DashboardIndexRoute: DashboardIndexRoute,
@@ -154,6 +192,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/categories/another",
         "/auth/",
         "/categories/",
         "/dashboard/",
@@ -162,6 +201,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/categories/another": {
+      "filePath": "categories/another.tsx"
     },
     "/auth/": {
       "filePath": "auth/index.tsx"
