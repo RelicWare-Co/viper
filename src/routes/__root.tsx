@@ -19,7 +19,6 @@ function Root() {
   const queryClient = new QueryClient();
   return (
     <>
-      <TanStackRouterDevtools />
       <QueryClientProvider client={queryClient}>
         <MantineProvider theme={theme}>
           <Notifications />
