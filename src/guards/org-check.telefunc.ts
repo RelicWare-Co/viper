@@ -9,5 +9,5 @@ export async function orgCheck() {
     if (!session.activeOrganizationId){
         return err({text:"No organization selected", code: "NO_ORG"});
     }
-    return ok()
+    return ok({})
 }
