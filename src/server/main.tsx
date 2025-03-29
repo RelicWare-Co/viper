@@ -14,6 +14,7 @@ if (!isProd) {
 	html = html.replace(
 		"<head>",
 		`
+    <link rel="icon" href="/favicon.webp"></link>
     <script type="module">
 import RefreshRuntime from "/@react-refresh"
 RefreshRuntime.injectIntoGlobalHook(window)

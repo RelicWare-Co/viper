@@ -27,7 +27,6 @@ function Root() {
 	const [opened, { toggle }] = useDisclosure();
 	return (
 		<>
-			<TanStackRouterDevtools />
 			<MantineProvider theme={theme}>
 				<Notifications />
 				<AppShell
@@ -72,8 +71,8 @@ function Root() {
 						<Link href="/categories" label="Categories" />
 					</AppShell.Navbar>
 					<AppShell.Main>
-						{" "}
 						<Outlet />
+						<TanStackRouterDevtools />
 					</AppShell.Main>
 				</AppShell>
 			</MantineProvider>
